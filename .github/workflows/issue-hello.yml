@@ -1,0 +1,22 @@
+name: Say Hello To An Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  say-hello:
+    name: I am saying hello
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v6
+      id: my-script
+      with:
+        result-encoding: string
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "Hello!"
+          })

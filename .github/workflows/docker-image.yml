@@ -1,0 +1,21 @@
+name: Test Container
+
+on:
+  workflow_dispatch: 
+  
+jobs:
+  run-in-container:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/chocrates-test-org/garbage:main
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+      env:
+        HOME: "/usr/workspace"
+        CHRISTEST: "true"
+
+    steps:
+    - run: |
+        env
+        az --help
