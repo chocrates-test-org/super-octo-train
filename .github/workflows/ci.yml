@@ -30,3 +30,11 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
+
+      - uses: LouisBrunner/checks-action@v1.6.1
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Code Coverage
+          conclusion: ${{ job.status }}
+          output_text_description_file: code-coverage-results-file.md
