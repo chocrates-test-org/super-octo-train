@@ -14,9 +14,7 @@ jobs:
           npm run test
       - name: Convert lcov to cobertura
         run: |
-          curl https://raw.github.com/eriwen/lcov-to-cobertura-xml/master/lcov_cobertura/lcov_cobertura.py -o lcov_cobertura.py
-          ls
-          which python
+          curl https://raw.githubusercontent.com/eriwen/lcov-to-cobertura-xml/master/lcov_cobertura/lcov_cobertura.py --output lcov_cobertura.py
           python3 lcov_cobertura.py coverage/lcov.info --output coverage/coverage.xml
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
