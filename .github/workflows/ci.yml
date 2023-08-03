@@ -12,10 +12,14 @@ jobs:
       - run: |
           npm install --include=dev
           npm run test
+      - name: Convert lcov to cobertura
+        run: |
+          curl https://raw.github.com/eriwen/lcov-to-cobertura-xml/master/lcov_cobertura/lcov_cobertura.py -o lcov_cobertura.py
+          python lcov_cobertura.py coverage/lcov.info coverage/coverage.xml --demangle
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: coverage/**/clover.xml
+          filename: coverage/**/coverage.xml
           badge: true
           format: markdown
       - name: Add Coverage PR Comment
