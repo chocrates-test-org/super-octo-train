@@ -9,16 +9,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm run test
+      - run: |
+          npm install --include=dev
+          npm run test
+      - name: Convert lcov to cobertura
+        run: |
+          curl https://raw.githubusercontent.com/eriwen/lcov-to-cobertura-xml/master/lcov_cobertura/lcov_cobertura.py --output lcov_cobertura.py
+          python3 lcov_cobertura.py coverage/lcov.info --output coverage/coverage.xml
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: coverage/**/clover.xml
+          filename: coverage/**/coverage.xml
           badge: true
           format: markdown
+          output: both
+          thresholds: '60 80'
       - name: Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
         with:
           recreate: true
           path: code-coverage-results.md
+
+      - uses: LouisBrunner/checks-action@v1.6.1
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Code Coverage
+          conclusion: ${{ job.status }}
+          output_text_description_file: code-coverage-results.md
+          output: |
+            {"title": "Code Coverage Results Check", "summary":"Code Coverage Results"}
